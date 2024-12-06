@@ -1,0 +1,6 @@
+name: advent_of_code_2021
+environment:
+    sdk: '>=2.14.4 <3.0.0'
+dependencies:
+    quantity: ^2.0.0
+    stack: ^0.2.1
