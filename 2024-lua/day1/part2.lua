@@ -1,4 +1,7 @@
-local example_input = "./example-input.txt"
+package.path = package.path .. ";../?.lua"
+local debug = require("lib.debug")
+
+-- local example_input = "./example-input.txt"
 local input = "./input.txt"
 
 ---@param filename string
@@ -6,6 +9,7 @@ local input = "./input.txt"
 local function get_number_lists(filename)
    local left = {}
    local right = {}
+   debug.list(right)
 
    local i = 0
    for line in io.lines(filename) do
@@ -33,13 +37,7 @@ function table.contains(table, element)
    return false
 end
 
-local function dbg(table)
-   for _, v in pairs(table) do
-      print(v)
-   end
-end
-
-local function run()
+local function main()
    local number_lists = get_number_lists(input)
    local left = number_lists[1]
    local right = number_lists[2]
@@ -61,4 +59,4 @@ local function run()
    print(answer_total)
 end
 
-run()
+main()
