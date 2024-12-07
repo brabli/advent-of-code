@@ -1,10 +1,5 @@
--- Read the file
--- SPlit each line by a space
--- Zip left and right numbers together
--- Sort them both
--- Iterate over each one finding the difference between them
-
 local example_input = "./example-input.txt"
+local input = "./input.txt"
 
 ---@param filename string
 ---@return table
@@ -28,23 +23,13 @@ local function get_number_lists(filename)
    return { left, right }
 end
 
-local function unique_values(tbl)
-   local tmp = {}
-   for _, value in pairs(tbl) do
-      if not table.contains(tmp, value) then
-         table.insert(tmp, value)
-      end
-   end
-
-   return tmp
-end
-
 function table.contains(table, element)
    for _, value in pairs(table) do
       if value == element then
          return true
       end
    end
+
    return false
 end
 
@@ -55,12 +40,25 @@ local function dbg(table)
 end
 
 local function run()
-   local number_lists = get_number_lists(example_input)
+   local number_lists = get_number_lists(input)
    local left = number_lists[1]
    local right = number_lists[2]
 
-   local unique_left = unique_values(left)
-   dbg(unique_left)
+   local answer_total = 0
+
+   for _, left_val in pairs(left) do
+      local counter = 0
+      for _, right_val in pairs(right) do
+         if left_val == right_val then
+            counter = counter + 1
+         end
+
+         answer_total = answer_total + left_val * counter
+         counter = 0
+      end
+   end
+
+   print(answer_total)
 end
 
 run()
