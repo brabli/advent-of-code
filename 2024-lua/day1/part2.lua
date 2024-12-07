@@ -27,16 +27,6 @@ local function get_number_lists(filename)
    return { left, right }
 end
 
-function table.contains(table, element)
-   for _, value in pairs(table) do
-      if value == element then
-         return true
-      end
-   end
-
-   return false
-end
-
 local function main()
    local number_lists = get_number_lists(input)
    local left = number_lists[1]
