@@ -1,25 +1,6 @@
--- Read the file
--- SPlit each line by a space
--- Zip left and right numbers together
--- Sort them both
--- Iterate over each one finding the difference between them
-
 local example_input = "./input.txt"
 
--- Debug a table
----@param tbl table
-local function debug(tbl)
-   for v in tbl do
-      print(string.rep(" ", 2))
-      if type(v) == "table" then
-         debug(v)
-      else
-         print(string.rep(" ", 2) .. tostring(v))
-      end
-   end
-end
-
-local function run()
+local function main()
    local lines = io.lines(example_input)
    local i = 0
    local left = {}
@@ -50,4 +31,4 @@ local function run()
    print(total)
 end
 
-run()
+main()
