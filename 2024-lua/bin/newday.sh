@@ -32,7 +32,7 @@ mkdir $DIR
 
 cd $DIR
 
-touch example_input.txt
+touch example-input.txt
 touch input.txt
 touch part1.lua
 touch part2.lua
