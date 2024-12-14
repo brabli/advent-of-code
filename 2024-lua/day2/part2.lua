@@ -70,16 +70,66 @@ local function is_gradual(report)
    return true
 end
 
+---@param report string
+---@return boolean
+local function is_report_safe(report)
+   local decreasing = is_decreasing(report)
+   local increasing = is_increasing(report)
+   local gradual = is_gradual(report)
+
+   return (decreasing or increasing) and gradual
+end
+
+---@return number[]
+local function create_dampened_reports(report)
+   local numbers_in_report = {}
+
+   for number in string.gmatch(report, "%d+") do
+      table.insert(numbers_in_report, number)
+   end
+
+   local damp_reports = {}
+
+   for i = 1, #numbers_in_report do
+      local damp_report = {}
+
+      for j = 1, #numbers_in_report do
+         if i ~= j then
+            table.insert(damp_report, numbers_in_report[j])
+         end
+      end
+
+      local damp_report_string = table.concat(damp_report, " ")
+
+      table.insert(damp_reports, damp_report_string)
+   end
+
+   return damp_reports
+end
+
+local function is_dampened_report_safe(report)
+   local dampened_reports = create_dampened_reports(report)
+
+   for _, damp_report in pairs(dampened_reports) do
+      report = tostring(damp_report)
+      if is_report_safe(report) then
+         return true
+      end
+   end
+
+   return false
+end
+
 local function main()
    local num_safe_reports = 0
 
    for report in io.lines(input) do
-      local decreasing = is_decreasing(report)
-      local increasing = is_increasing(report)
-      local gradual = is_gradual(report)
-
-      if (decreasing or increasing) and gradual then
+      if is_report_safe(report) then
          num_safe_reports = num_safe_reports + 1
+      else
+         if is_dampened_report_safe(report) then
+            num_safe_reports = num_safe_reports + 1
+         end
       end
    end
 
