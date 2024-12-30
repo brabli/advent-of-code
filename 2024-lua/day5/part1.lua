@@ -63,32 +63,37 @@ local function is_page_list_valid(page_list)
    return true
 end
 
-local running_total = 0
-
-for page_list in io.lines(pages_input) do
+local function get_valid_page_lists()
    local valid_page_lists = {}
 
-   if is_page_list_valid(page_list) then
-      table.insert(valid_page_lists, page_list)
-   end
-
-   for _, valid_page_list in pairs(valid_page_lists) do
-      local page_list_table = {}
-      for number in string.gmatch(valid_page_list, "%d+") do
-         table.insert(page_list_table, number)
+   for page_list in io.lines(pages_input) do
+      if is_page_list_valid(page_list) then
+         table.insert(valid_page_lists, page_list)
       end
-
-      local centre_index = math.ceil(#page_list_table / 2)
-      running_total = running_total + page_list_table[centre_index]
    end
+
+   return valid_page_lists
+end
+
+---@param page_list string
+---@return number
+local function find_middle_value(page_list)
+   local page_list_table = {}
+
+   for number in string.gmatch(page_list, "%d+") do
+      table.insert(page_list_table, number)
+   end
+
+   local centre_index = math.ceil(#page_list_table / 2)
+
+   return page_list_table[centre_index]
+end
+
+local running_total = 0
+
+for _, valid_page_list in pairs(get_valid_page_lists()) do
+   local middle_value = find_middle_value(valid_page_list)
+   running_total = running_total + middle_value
 end
 
 print(running_total)
-
--- Return a table of rules that apply to the current page list
---    Check each rule, if both numbers are contained within the pages it is a valid rule
---
--- For each valid rule, check to make sure the first number comes first in pages and the second number comes later
---    If so, it is valid.
---
--- For each valid set of pages, find the middle number.
