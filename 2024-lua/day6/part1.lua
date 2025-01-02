@@ -39,5 +39,25 @@ local function get_obstacles()
    return obstacles
 end
 
+local function change_direction(direction)
+   if direction == "up" then
+      return "right"
+   elseif direction == "right" then
+      return "down"
+   elseif direction == "down" then
+      return "left"
+   end
+
+   return "up"
+end
+
+---@param position table
+---@param direction string
+---@param obstacles table
+local function is_blocked_by_obstacle(position, direction, obstacles)
+   if direction == "up" then
+   elseif direction == 'right' then
+end
+
 local starting_coords = get_start_coords()
 local obstacles = get_obstacles()
