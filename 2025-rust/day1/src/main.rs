@@ -1,29 +1,57 @@
 use std::fs;
 
 fn main() {
-    let file_contents = fs::read_to_string("example.txt").expect("File to be read.");
+    let file_contents = fs::read_to_string("input.txt").expect("File to be read.");
+
     let mut dial = Dial::new();
     let mut zero_counter = 0;
 
     for line in file_contents.lines().into_iter() {
         let turn = Turn::from(line);
+
+        let full_cycles = turn.amount / 100;
+        let amount = turn.amount % 100;
+
+        dbg!(full_cycles, amount);
+
+        zero_counter += full_cycles;
+
+        if 0 == amount {
+            continue;
+        }
+
+        match turn.direction {
+            Direction::Left => {
+                if dial.value - amount <= 0 && dial.value != 0 {
+                    zero_counter += 1;
+                }
+            }
+            Direction::Right => {
+                if dial.value + amount >= 100 {
+                    zero_counter += 1;
+                }
+            }
+        }
+
+        let pre_turn_value = dial.value;
         dial.turn(turn);
 
-        if dial.value == 0 {
-            zero_counter += 1;
-        }
+        println!(
+            "Zeroes: {}    Dial pre: {}    Dial post: {}",
+            zero_counter, pre_turn_value, dial.value,
+        );
     }
 
-    dbg!(zero_counter);
+    // dbg!(zero_counter);
 }
 
 #[derive(Debug)]
 struct Turn {
     direction: Direction,
-    degrees: Degrees,
+    amount: Degrees,
 }
 
-#[derive(Debug)]
+#[derive(Debug, PartialEq)]
 enum Direction {
     Left,
     Right,
@@ -41,10 +69,10 @@ impl Dial {
         Dial { value: 50 }
     }
 
-    fn turn(&mut self, turn: Turn) {
+    fn turn(&mut self, turn: Turn) -> i32 {
         let mut result = match turn.direction {
-            Direction::Left => self.value - turn.degrees,
-            Direction::Right => self.value + turn.degrees,
+            Direction::Left => self.value - turn.amount,
+            Direction::Right => self.value + turn.amount,
         };
 
         while result >= 100 {
@@ -56,6 +84,8 @@ impl Dial {
         }
 
         self.value = result;
+
+        result
     }
 }
 
@@ -76,6 +106,9 @@ impl Turn {
             .expect("Second part of line should be a i32.");
 
         // assert!(degrees < 100);
-        Turn { direction, degrees }
+        Turn {
+            direction,
+            amount: degrees,
+        }
     }
 }
